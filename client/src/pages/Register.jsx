@@ -13,9 +13,11 @@ function Register() {
     name: "",
     email: "",
     password: "",
+    role: "candidate",
   });
 
   const handleChange = (e) => {
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -23,25 +25,32 @@ function Register() {
   };
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
     try {
 
-      const data = await registerUser(formData);
+      const data = await registerUser(
+        formData
+      );
 
-      toast.success(data.message);
+      toast.success(
+        data.message
+      );
 
       navigate("/login");
 
     } catch (error) {
 
       toast.error(
-        error.response.data.message
+        error.response?.data?.message ||
+        "Registration Failed"
       );
     }
   };
 
   return (
+
     <div className="min-h-screen bg-gray-100">
 
       <Navbar />
@@ -64,7 +73,7 @@ function Register() {
               name="name"
               placeholder="Full Name"
               onChange={handleChange}
-              className="w-full border border-gray-300 p-4 rounded-xl"
+              className="w-full border p-4 rounded-xl"
             />
 
             <input
@@ -72,7 +81,7 @@ function Register() {
               name="email"
               placeholder="Email"
               onChange={handleChange}
-              className="w-full border border-gray-300 p-4 rounded-xl"
+              className="w-full border p-4 rounded-xl"
             />
 
             <input
@@ -80,31 +89,31 @@ function Register() {
               name="password"
               placeholder="Password"
               onChange={handleChange}
-              className="w-full border border-gray-300 p-4 rounded-xl"
+              className="w-full border p-4 rounded-xl"
             />
 
             <select
-  name="role"
-  onChange={handleChange}
-  className="w-full border p-4 rounded-xl"
->
+              name="role"
+              onChange={handleChange}
+              className="w-full border p-4 rounded-xl"
+            >
 
-  <option value="candidate">
-    Candidate
-  </option>
+              <option value="candidate">
+                Candidate
+              </option>
 
-  <option value="employer">
-    Employer
-  </option>
+              <option value="employer">
+                Employer
+              </option>
 
-</select>
+            </select>
 
-           <button
-  type="submit"
-  className="w-full bg-blue-700 text-white py-4 rounded-xl hover:bg-blue-800"
->
-  Register
-</button>
+            <button
+              type="submit"
+              className="w-full bg-blue-700 text-white py-4 rounded-xl hover:bg-blue-800"
+            >
+              Register
+            </button>
 
           </form>
 
@@ -116,4 +125,4 @@ function Register() {
   )
 }
 
-export default Register
+export default Register;
