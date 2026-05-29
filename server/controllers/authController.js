@@ -2,25 +2,38 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+
+// REGISTER USER
 const registerUser = async (req, res) => {
+
   try {
 
-    const { name, email, password } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+    } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const userExists = await User.findOne({
+      email,
+    });
 
-    if (existingUser) {
+    if (userExists) {
+
       return res.status(400).json({
         message: "User already exists",
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
+      role,
     });
 
     res.status(201).json({
@@ -29,33 +42,47 @@ const registerUser = async (req, res) => {
     });
 
   } catch (error) {
+
+    console.log(error);
+
     res.status(500).json({
-      message: error.message,
+      message: "Server Error",
     });
   }
 };
 
+
+// LOGIN USER
 const loginUser = async (req, res) => {
+
   try {
 
-    const { email, password } = req.body;
+    const {
+      email,
+      password,
+    } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      email,
+    });
 
     if (!user) {
+
       return res.status(400).json({
-        message: "Invalid Credentials",
+        message: "Invalid Email or Password",
       });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isMatch =
+      await bcrypt.compare(
+        password,
+        user.password
+      );
 
     if (!isMatch) {
+
       return res.status(400).json({
-        message: "Invalid Credentials",
+        message: "Invalid Email or Password",
       });
     }
 
@@ -70,17 +97,20 @@ const loginUser = async (req, res) => {
     );
 
     res.status(200).json({
-      message: "Login Successful",
       token,
       user,
     });
 
   } catch (error) {
+
+    console.log(error);
+
     res.status(500).json({
-      message: error.message,
+      message: "Server Error",
     });
   }
 };
+
 
 module.exports = {
   registerUser,

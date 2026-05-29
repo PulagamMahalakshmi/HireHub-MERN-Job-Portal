@@ -41,7 +41,7 @@ function Login() {
 
       toast.success("Login Successful");
 
-      navigate("/");
+      navigate("");
 
     } catch (error) {
 
